@@ -1,0 +1,83 @@
+#!/usr/bin/env python3
+
+# https://www.openurlslist.com
+
+import json
+import subprocess
+
+from pathlib import Path
+from rich.progress import track
+
+import praw
+import typer
+
+
+op_mapping = {
+    "username": "value",
+    "password": "value",
+    "API ID": "value",
+    "API Secret": "value",
+    "one-time password": "totp",
+}
+
+praw_mapping = {
+    "username": "username",
+    "password": "password",
+    "API ID": "client_id",
+    "API Secret": "client_secret",
+}
+
+def one_password_to_praw() -> dict[str, str]:
+
+    op = subprocess.run(["op", "item", "get", "Reddit", "--format", "json"],
+        capture_output=True,
+        text=True
+    ).stdout
+
+    otp = ""
+    config = {}
+
+    for field in json.loads(op)["fields"]:
+
+        label = field["label"]
+
+        if value := field.get(op_mapping.get(label)):
+
+            if label == "one-time password":
+                otp = value
+            else:
+                config[praw_mapping[label]] = value
+
+    config["password"] += f":{otp}"
+
+    return config
+
+
+def main() -> None:
+
+    print("Logging into Reddit...")
+
+    config = one_password_to_praw()
+    agent = "macOS:saved-exporter:0.1 (by u/{config['username']})",
+
+    reddit = praw.Reddit(user_agent=agent, **config)
+
+    print("Extracting saved posts...")
+
+    with Path("saved.txt").open("w") as fh:
+
+        for item in track(reddit.user.me().saved(limit=None)):
+
+            try:
+                path = reddit.comment(item.id).permalink
+            except Exception:
+                path = reddit.submission(item.id).permalink
+
+            if path:
+                fh.write(f"https://reddit.com{path}\n")
+
+    print("Finished Downloading!")
+
+
+if __name__ == "__main__":
+    typer.run(main)

@@ -1,0 +1,22 @@
+[project]
+name = ""
+version = ""
+description = ""
+authors = [
+    {name = "Dan Sully", email = "dan+github@sully.org"},
+]
+dependencies = [
+    "rich>=13.3.1",
+    "praw>=7.6.1",
+    "typer[all]>=0.4.2",
+]
+requires-python = ">=3.10"
+license = {text = "MIT"}
+
+[tool.pdm]
+[tool.pdm.dev-dependencies]
+dev = [
+    "black>=23.1.0",
+    "mypy>=1.0.1",
+    "isort>=5.12.0",
+]
