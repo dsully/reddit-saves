@@ -24,19 +24,12 @@ struct Response {
 }
 
 pub fn reddit_credentials(entry: &str) -> Result<Credentials> {
-    let output = Command::new("op")
-        .arg("item")
-        .arg("get")
-        .arg(entry)
-        .arg("--format=json")
-        .output()?;
+    let output = Command::new("op").arg("item").arg("get").arg(entry).arg("--format=json").output()?;
 
     let items = std::str::from_utf8(&output.stdout)?;
     let response: Response = serde_json::from_str(items)?;
 
-    let mut credentials = Credentials {
-        ..Default::default()
-    };
+    let mut credentials = Credentials { ..Default::default() };
 
     for field in response.fields {
         match field.label.as_str() {
