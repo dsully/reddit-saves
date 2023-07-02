@@ -1,0 +1,28 @@
+[package]
+name = "reddit-saves"
+authors = [ "Dan Sully <dan+github@sully.org>" ]
+version = "0.0.1"
+edition = "2021"
+
+[[bin]]
+name = "reddit-saves"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "~4.3.8", features = [
+    "cargo",
+    "color",
+    "derive",
+    "suggestions",
+    "wrap_help",
+] }
+clap-verbosity-flag = "2.0.1"
+color-eyre = "0.6.2"
+env_logger = "0.10.0"
+roux = { version = "2.2.9", features = [
+    "blocking",
+    "rustls",
+], default-features = false }
+serde = "1.0.163"
+serde_json = "1.0.96"
+tracing = "0.1.37"
