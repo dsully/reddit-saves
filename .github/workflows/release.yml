@@ -6,6 +6,13 @@ on:
     tags:
       - v[0-9]+.*
 
+  workflow_dispatch:
+    inputs:
+      version:
+        type: string
+        description: "Release version"
+        required: true
+
 env:
   CARGO_TERM_COLOR: always
   RUSTFLAGS: "-D warnings"
