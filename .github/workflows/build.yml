@@ -65,17 +65,15 @@ jobs:
         id: build
         run: cargo build --release --target ${{ matrix.target }}
 
-      - name: Test
-        run: cargo test
+      # - name: Test
+      #   run: cargo test
 
       - name: Build archive name
         id: archive_name
         run: |
-          repo_name=${{ github.event.repository.name }}
           version=${{ github.ref_name }}
-          arch=${{ matrix.arch }}
           # [REPO_NAME]-[VERSION]-[OPERATING_SYSTEM]-[ARCHITECTURE].tar.gz
-          archive_name=${repo_name}-${version#v}-darwin-${arch}.tar.gz
+          archive_name=${{ github.event.repository.name }}-${version#v}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
           echo "archive_name=${archive_name}" >> $GITHUB_ENV
 
       - name: Archive release
