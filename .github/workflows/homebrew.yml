@@ -1,0 +1,28 @@
+---
+on:
+  release:
+    types: [published]
+
+  workflow_dispatch:
+
+jobs:
+  homebrew-releaser:
+    runs-on: ubuntu-latest
+    name: Publish to dsully/tap
+    steps:
+      - name: Release my project to my Homebrew tap
+        uses: Justintime50/homebrew-releaser@v1
+        with:
+          homebrew_owner: dsully
+          homebrew_tap: tap
+          formula_folder: Formula
+
+          github_token: ${{ secrets.HOMEBREW_GITHUB_TOKEN }}
+
+          install: |
+             bin.install "reddit-saves"
+
+          target_darwin_amd64: true
+          target_darwin_arm64: true
+          target_linux_amd64: true
+          target_linux_arm64: false

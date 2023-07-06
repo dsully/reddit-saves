@@ -40,5 +40,6 @@ jobs:
           target: ${{ matrix.target }}
           bin: reddit-saves
           tar: all
+          archive: $bin-$tag-$target
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
