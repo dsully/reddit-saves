@@ -2,10 +2,10 @@
 name: Build
 
 on:
+  workflow_dispatch:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+
 
 env:
   CARGO_NET_RETRY: 10
@@ -50,23 +50,9 @@ jobs:
       - uses: swatinem/rust-cache@v2
       - uses: extractions/setup-just@v1
 
-      - name: Versions
-        run: |
-          git version
-          cargo version
-
-      - name: Format Check
-        run: just format-check
-
-      - name: Clippy
-        run: just lint
-
       - name: Build
         id: build
         run: cargo build --release --target ${{ matrix.target }}
-
-      # - name: Test
-      #   run: cargo test
 
       - name: Build archive name
         id: archive_name
