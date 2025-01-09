@@ -1,10 +1,11 @@
+use std::fs::{create_dir_all, File};
+use std::io::{prelude::*, stdout, BufWriter};
+
 use clap::Parser;
 use color_eyre::eyre::Result;
 use roux::saved::SavedData;
 use roux::util::FeedOption;
 use roux::Reddit;
-use std::fs::{create_dir_all, File};
-use std::io::{prelude::*, stdout, BufWriter};
 use tracing::debug;
 
 mod cli;
@@ -57,13 +58,13 @@ fn main() -> Result<()> {
             break;
         }
 
-        for post in posts.data.children.iter() {
+        for post in &posts.data.children {
             if let SavedData::Submission(ref submission) = post.data {
                 if cli.subreddit.clone().is_some_and(|sub| submission.subreddit != sub) {
                     continue;
                 }
 
-                writeln!(buffer, "https://reddit.com{}", submission.permalink)?
+                writeln!(buffer, "https://reddit.com{}", submission.permalink)?;
             }
         }
 
